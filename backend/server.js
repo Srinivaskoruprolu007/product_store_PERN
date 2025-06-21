@@ -4,6 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import { sql } from "./config/db.js";
+import { aj } from "./lib/arcjet.js";
 import productRoutes from "./routes/product.routes.js";
 
 dotenv.config(); // load env variables from .env file
@@ -23,6 +24,35 @@ app.use(express.json());
 
 // CORS middleware : Cross-Origin Resource Sharing middleware
 app.use(cors());
+
+app.use(async (req, res, next) => {
+  try {
+    const decision = await aj.protect(req); // protect the request
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        return res.status(429).json({
+          success: false,
+          error: "Rate limit exceeded",
+        });
+      }
+      if (decision.reason.isBot()) {
+        return res.status(403).json({
+          success: false,
+          error: "Access denied suspected bot activity",
+        });
+      }
+      // handling other denial reasons
+      res.status(403).json({
+        success: false,
+        error: "Access denied",
+      });
+      next();
+    }
+  } catch (error) {
+    console.error("Arcject error during protection:", error);
+    next(error);
+  }
+});
 
 // use the product routes
 app.use("/api/products", productRoutes);
@@ -45,13 +75,13 @@ async function initializeDatabase() {
   }
 }
 
-initializeDatabase().then(() => {
-  app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+initializeDatabase()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
+    });
   })
-}).catch((error) => {
-  console.error('Error initializing database:', error);
-  process.exit(1);
-});
-
-
+  .catch((error) => {
+    console.error("Error initializing database:", error);
+    process.exit(1);
+  });
