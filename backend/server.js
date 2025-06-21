@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import { sql } from "./config/db.js";
 import productRoutes from "./routes/product.routes.js";
 
 dotenv.config(); // load env variables from .env file
@@ -26,6 +27,31 @@ app.use(cors());
 // use the product routes
 app.use("/api/products", productRoutes);
 
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+// function to initialize the database (create table)
+async function initializeDatabase() {
+  try {
+    await sql`
+    CREATE TABLE IF NOT EXISTS products(
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      price DECIMAL(10,2) NOT NULL,
+      image VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )`;
+    console.log('Database table "products" checked/created successfully');
+  } catch (error) {
+    console.error('Error checking/creating database table "products":', error);
+    process.exit(1);
+  }
+}
+
+initializeDatabase().then(() => {
+  app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
+  })
+}).catch((error) => {
+  console.error('Error initializing database:', error);
+  process.exit(1);
 });
+
+
