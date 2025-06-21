@@ -1,9 +1,9 @@
-import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-
+import productRoutes from "./routes/product.routes.js";
 
 dotenv.config(); // load env variables from .env file
 
@@ -23,6 +23,9 @@ app.use(express.json());
 // CORS middleware : Cross-Origin Resource Sharing middleware
 app.use(cors());
 
+// use the product routes
+app.use("/api/products", productRoutes);
+
 app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+  console.log(`Server started on port ${port}`);
 });
