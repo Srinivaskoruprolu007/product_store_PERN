@@ -42,12 +42,12 @@ app.use(async (req, res, next) => {
         });
       }
       // handling other denial reasons
-      res.status(403).json({
+      return res.status(403).json({
         success: false,
         error: "Access denied",
       });
-      next();
     }
+    next(); // Only call next if not denied
   } catch (error) {
     console.error("Arcject error during protection:", error);
     next(error);

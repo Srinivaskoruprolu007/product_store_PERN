@@ -12,9 +12,9 @@ export const aj = arcjet({
     }),
     // detectBot rule : Detects bots
     detectBot({
-      mode: "LIVE",
+      mode: "DRY_RUN", // changed to DRY RUN for testing
       block: ["AUTOMATED"],
-      allow: ["search"], // allow search bots
+      allow: ["search"],
     }),
     // rate limiting rules
     tokenBucket({
