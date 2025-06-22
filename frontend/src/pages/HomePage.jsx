@@ -1,8 +1,8 @@
 import { PlusCircle, RefreshCcw } from "lucide-react";
 import { useEffect } from "react";
-import { AddProductModal } from "../components/AddProductModal";
 import ProductCard from "../components/ProductCard";
 import { useProductStore } from "../store/useProductStore";
+import { AddProductModal } from "../components/AddProductModal";
 
 const HomePage = () => {
   const { products, loading, error, fetchProducts } = useProductStore();

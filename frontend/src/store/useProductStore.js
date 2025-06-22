@@ -29,15 +29,20 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get(`${API_BASE_URL}/api/products`);
-      // Ensure products is always an array
+      // Handle both array and { products: [...] } response
+
       set({
-        products: Array.isArray(response.data) ? response.data : [],
+        products: Array.isArray(response.data.data) ? response.data.data : [],
         loading: false,
       });
     } catch (error) {
-      console.log("Error fetching products:", error);
-      set({ error: error.error, loading: false });
-      toast.error("Error fetching products");
+      const errMsg =
+        error.response?.data?.error ||
+        error.message ||
+        "Error fetching products";
+      console.log("Error fetching products:", errMsg);
+      set({ error: errMsg, loading: false });
+      toast.error(errMsg);
     }
   },
   fetchProduct: async (id) => {
@@ -51,9 +56,13 @@ export const useProductStore = create((set, get) => ({
         loading: false,
       });
     } catch (error) {
-      console.error("Error fetching product:", error);
-      set({ error: error.error, loading: false });
-      toast.error("Error fetching product");
+      const errMsg =
+        error.response?.data?.error ||
+        error.message ||
+        "Error fetching product";
+      console.error("Error fetching product:", errMsg);
+      set({ error: errMsg, loading: false });
+      toast.error(errMsg);
     }
   },
 
@@ -82,9 +91,11 @@ export const useProductStore = create((set, get) => ({
       document.getElementById("add_product_modal")?.close();
       set({ loading: false });
     } catch (error) {
-      console.error("Error adding product:", error);
-      set({ error: error.error, loading: false });
-      toast.error("Error adding product");
+      const errMsg =
+        error.response?.data?.error || error.message || "Error adding product";
+      console.error("Error adding product:", errMsg);
+      set({ error: errMsg, loading: false });
+      toast.error(errMsg);
     }
   },
   updateProduct: async (id) => {
@@ -110,9 +121,13 @@ export const useProductStore = create((set, get) => ({
       document.getElementById("update_product_modal")?.close();
       set({ loading: false });
     } catch (error) {
-      console.error("Error updating product:", error);
-      set({ error: error.error, loading: false });
-      toast.error("Error updating product");
+      const errMsg =
+        error.response?.data?.error ||
+        error.message ||
+        "Error updating product";
+      console.error("Error updating product:", errMsg);
+      set({ error: errMsg, loading: false });
+      toast.error(errMsg);
     }
   },
   deleteProduct: async (id) => {
@@ -120,14 +135,20 @@ export const useProductStore = create((set, get) => ({
     try {
       await axios.delete(`${API_BASE_URL}/api/products/${id}`);
       set((state) => ({
-        products: state.products.filter((product) => product.id !== id),
+        products: Array.isArray(state.products)
+          ? state.products.filter((product) => product.id !== id)
+          : [],
         loading: false,
       }));
       toast.success("Product deleted successfully");
     } catch (error) {
-      console.error("Error deleting product:", error);
-      set({ error: error.error, loading: false });
-      toast.error("Error deleting product");
+      const errMsg =
+        error.response?.data?.error ||
+        error.message ||
+        "Error deleting product";
+      console.error("Error deleting product:", errMsg);
+      set({ error: errMsg, loading: false });
+      toast.error(errMsg);
     }
   },
 }));
