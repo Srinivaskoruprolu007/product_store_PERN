@@ -126,9 +126,7 @@ const ProductPage = () => {
                 placeholder="Product Name"
                 className="input input-bordered w-full"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData("name", e.target.value)}
               />
             </div>
             <div>
@@ -140,9 +138,7 @@ const ProductPage = () => {
                 placeholder="Product Price"
                 className="input input-bordered w-full"
                 value={formData.price}
-                onChange={(e) =>
-                  setFormData({ ...formData, price: e.target.value })
-                }
+                onChange={(e) => setFormData("price", e.target.value)}
               />
             </div>
             <div>
@@ -154,9 +150,7 @@ const ProductPage = () => {
                 placeholder="Product Image"
                 className="input input-bordered w-full"
                 value={formData.image}
-                onChange={(e) =>
-                  setFormData({ ...formData, image: e.target.value })
-                }
+                onChange={(e) => setFormData("image", e.target.value)}
               />
             </div>
             <div className="card-actions justify-end mt-6">
@@ -175,7 +169,7 @@ const ProductPage = () => {
                 )}
               </button>
               <button
-                onClick={handleDelete}
+                onClick={handleDeleteProduct}
                 className="btn btn-error ml-4"
                 type="button"
                 disabled={loading}
