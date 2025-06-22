@@ -22,6 +22,17 @@ const ProductPage = () => {
       fetchProduct(id);
     }
   }, [id, fetchProduct]);
+
+  // Sync formData with currentProduct when it changes
+  useEffect(() => {
+    if (currentProduct) {
+      setFormData("name", currentProduct.name || "");
+      setFormData("price", currentProduct.price || "");
+      setFormData("image", currentProduct.image || "");
+    }
+    // eslint-disable-next-line
+  }, [currentProduct]);
+
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     await updateProduct(id);

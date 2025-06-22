@@ -52,7 +52,6 @@ export const useProductStore = create((set, get) => ({
       const productData = response.data;
       set({
         currentProduct: productData,
-        formData: { ...productData },
         loading: false,
       });
     } catch (error) {
