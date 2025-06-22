@@ -70,7 +70,7 @@ app.use("/api/products", productRoutes);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(rootDir, "frontend/build")));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(rootDir, "frontend/build", "index.html"));
+    res.sendFile(path.join(rootDir, "frontend", "build", "index.html"));
   });
 }
 
