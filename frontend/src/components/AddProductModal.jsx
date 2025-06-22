@@ -20,9 +20,7 @@ export const AddProductModal = () => {
               placeholder="Product Name"
               className="input input-bordered w-full"
               value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
+              onChange={(e) => setFormData("name", e.target.value)}
             />
           </div>
           <div>
@@ -34,9 +32,7 @@ export const AddProductModal = () => {
               placeholder="Product Price"
               className="input input-bordered w-full"
               value={formData.price}
-              onChange={(e) =>
-                setFormData({ ...formData, price: e.target.value })
-              }
+              onChange={(e) => setFormData("price", e.target.value)}
             />
           </div>
           <div>
@@ -48,9 +44,7 @@ export const AddProductModal = () => {
               placeholder="Product Image URL"
               className="input input-bordered w-full"
               value={formData.image}
-              onChange={(e) =>
-                setFormData({ ...formData, image: e.target.value })
-              }
+              onChange={(e) => setFormData("image", e.target.value)}
             />
           </div>
           <div className="modal-action flex justify-between">
