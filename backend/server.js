@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import path from "path";
+import { fileURLToPath } from "url";
 import { sql } from "./config/db.js";
 import { aj } from "./lib/arcjet.js";
 import productRoutes from "./routes/product.routes.js";
@@ -14,7 +16,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // security middleware: Sets security headers
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 
 // logging middlewares : HTTP request logger middleware
 app.use(morgan("dev"));
@@ -54,8 +60,19 @@ app.use(async (req, res, next) => {
   }
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, "../");
+
 // use the product routes
 app.use("/api/products", productRoutes);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(rootDir, "frontend/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(rootDir, "frontend/build", "index.html"));
+  });
+}
 
 // function to initialize the database (create table)
 async function initializeDatabase() {
