@@ -65,11 +65,14 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "../");
 
 // use the product routes
+console.log("Registering route: /api/products");
 app.use("/api/products", productRoutes);
 
 if (process.env.NODE_ENV === "production") {
+  console.log("Registering static route: /frontend/build");
   app.use(express.static(path.join(rootDir, "frontend/build")));
   app.get("*", (req, res) => {
+    console.log("Registering catch-all route: *");
     res.sendFile(path.join(rootDir, "frontend", "build", "index.html"));
   });
 }
